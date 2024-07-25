@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
-    private const val BASE_URL = "https://uselessfacts.jsph.pl/api/v2"
+    private const val BASE_URL = "https://uselessfacts.jsph.pl/api/v2/"
 
     @Provides
     @Singleton
