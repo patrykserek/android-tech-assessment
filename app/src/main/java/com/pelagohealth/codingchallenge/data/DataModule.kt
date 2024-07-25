@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -34,10 +35,15 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(moshi: Moshi): Retrofit =
+    fun provideConverterFactory(moshi: Moshi): Converter.Factory =
+        MoshiConverterFactory.create(moshi)
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(converter: Converter.Factory): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(converter)
             .build()
 
     @Provides
