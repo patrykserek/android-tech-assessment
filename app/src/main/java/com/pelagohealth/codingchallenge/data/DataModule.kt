@@ -1,7 +1,9 @@
 package com.pelagohealth.codingchallenge.data
 
 import com.pelagohealth.codingchallenge.data.datasource.rest.FactsRestApi
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +23,14 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi = Moshi.Builder().build()
+    fun provideJsonAdapterFactory(): JsonAdapter.Factory = KotlinJsonAdapterFactory()
+
+    @Provides
+    @Singleton
+    fun provideMoshi(adapter: JsonAdapter.Factory): Moshi =
+        Moshi.Builder()
+            .add(adapter)
+            .build()
 
     @Provides
     @Singleton
