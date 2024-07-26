@@ -60,6 +60,8 @@ should be good enough to give us an idea of your skills and how you approach a t
   moved to the place dedicated to URLs to external services.
 - For the same reason, I decided not to use a UseCase for fetching facts. This operation doesn't
   require any extra logic to be covered in the UseCase.
+- I missed that the list should be below the button, so I changed the order of some UI components on
+  the home screen to make it cleaner.
 
 ## Further tweaks
 
@@ -68,6 +70,7 @@ should be good enough to give us an idea of your skills and how you approach a t
 - Introduce facts history persistence.
 - Add Compose tests.
 - Make swipe-to-dismiss composable more generic to be able to reuse it.
+- Improve animations on the home screen.
 
 ## Submission
 
