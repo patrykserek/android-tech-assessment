@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -109,12 +109,20 @@ fun SwipeToDismissItem(
     text: String,
     onSwipe: (String) -> Unit,
 ) {
+    val swipeToDismissState = rememberDismissState(
+        confirmValueChange = {
+            if (it == DismissValue.Default) {
+                false
+            } else {
+                onSwipe(text)
+                true
+            }
+        }
+    )
+
     SwipeToDismiss(
         modifier = modifier,
-        state = rememberDismissState(
-            confirmValueChange = { onSwipe(text);true }
-        ),
-        directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
+        state = swipeToDismissState,
         background = {},
         dismissContent = {
             TextCard(
