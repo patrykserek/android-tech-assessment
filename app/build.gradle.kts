@@ -81,7 +81,9 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.48")
 
     // Unit testing
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(kotlin("test"))
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
     // UI testing
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
