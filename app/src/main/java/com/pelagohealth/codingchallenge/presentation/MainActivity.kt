@@ -95,7 +95,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.weight(1f))
         Button(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = { viewModel.fetchNewFact() }
+            onClick = viewModel::onMoreFactsClicked,
         ) {
             Text(text = stringResource(R.string.button_text))
         }

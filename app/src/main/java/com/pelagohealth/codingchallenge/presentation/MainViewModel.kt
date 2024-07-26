@@ -24,6 +24,10 @@ class MainViewModel @Inject constructor(
         fetchNewFact()
     }
 
+    fun onMoreFactsClicked() {
+        fetchNewFact()
+    }
+
     fun onFactSwiped(fact: String) {
         _state.update { oldState ->
             oldState.copy(
@@ -32,7 +36,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun fetchNewFact() {
+    private fun fetchNewFact() {
         viewModelScope.launch {
             runCatching { repository.get() }
                 .onSuccess { updateState(it.text) }
