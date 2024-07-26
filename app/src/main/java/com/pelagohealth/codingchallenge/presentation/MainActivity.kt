@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -65,7 +66,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             .padding(16.dp),
     ) {
         Text(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
             text = stringResource(R.string.label_random_fact),
             style = MaterialTheme.typography.labelLarge,
         )
@@ -75,11 +76,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
         )
         if (state.previousFacts.isNotEmpty()) {
             Text(
-                modifier = Modifier.padding(start = 8.dp, top = 12.dp),
+                modifier = Modifier.padding(start = 8.dp, top = 12.dp, bottom = 4.dp),
                 text = stringResource(R.string.label_history),
                 style = MaterialTheme.typography.labelLarge,
             )
-            LazyColumn(reverseLayout = true) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                reverseLayout = true,
+            ) {
                 items(
                     items = state.previousFacts,
                     key = { it },
@@ -139,9 +143,7 @@ fun TextCard(
     backgroundColor: Color,
 ) {
     Card(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .thenIf(text.isBlank()) { shimmer() },
+        modifier = Modifier.thenIf(text.isBlank()) { shimmer() },
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Text(
