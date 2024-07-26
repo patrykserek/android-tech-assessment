@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,9 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -68,13 +71,34 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 items = state.previousFacts,
                 key = { it },
             ) {
-                Text(
+                SwipeToDismissItem(
+                    modifier = Modifier.animateItemPlacement(),
                     text = it,
-                    modifier = modifier.animateItemPlacement(tween())
+                    viewModel::onFactSwiped,
                 )
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SwipeToDismissItem(
+    modifier: Modifier,
+    text: String,
+    onSwipe: (String) -> Unit,
+) {
+    SwipeToDismiss(
+        modifier = modifier,
+        state = rememberDismissState(
+            confirmValueChange = { onSwipe(text);true }
+        ),
+        directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
+        background = {},
+        dismissContent = {
+            Text(text = text)
+        }
+    )
 }
 
 @Preview(showBackground = true)

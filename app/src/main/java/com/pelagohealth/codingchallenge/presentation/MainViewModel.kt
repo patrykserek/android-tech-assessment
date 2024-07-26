@@ -24,6 +24,14 @@ class MainViewModel @Inject constructor(
         fetchNewFact()
     }
 
+    fun onFactSwiped(fact: String) {
+        _state.update { oldState ->
+            oldState.copy(
+                previousFacts = oldState.previousFacts.filter { it != fact },
+            )
+        }
+    }
+
     fun fetchNewFact() {
         viewModelScope.launch {
             runCatching { repository.get() }
