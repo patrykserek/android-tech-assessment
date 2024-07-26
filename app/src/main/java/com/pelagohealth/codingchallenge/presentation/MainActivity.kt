@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,6 +43,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = viewModel()
@@ -49,12 +54,25 @@ fun MainScreen(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = state.fact,
-            modifier = modifier
-        )
+        state.latestFact?.let {
+            Text(
+                text = it,
+                modifier = modifier
+            )
+        }
         Button(onClick = { viewModel.fetchNewFact() }) {
             Text("More facts!")
+        }
+        LazyColumn(reverseLayout = true) {
+            items(
+                items = state.previousFacts,
+                key = { it },
+            ) {
+                Text(
+                    text = it,
+                    modifier = modifier.animateItemPlacement(tween())
+                )
+            }
         }
     }
 }

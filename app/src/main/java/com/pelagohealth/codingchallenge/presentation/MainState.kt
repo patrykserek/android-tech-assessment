@@ -1,5 +1,6 @@
 package com.pelagohealth.codingchallenge.presentation
 
 data class MainState(
-    val fact: String = "",
+    val latestFact: String? = null,
+    val previousFacts: List<String> = emptyList(),
 )

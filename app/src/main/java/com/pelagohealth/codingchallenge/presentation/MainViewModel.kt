@@ -27,14 +27,18 @@ class MainViewModel @Inject constructor(
     fun fetchNewFact() {
         viewModelScope.launch {
             runCatching { repository.get() }
-                .onSuccess {
-                    _state.update { oldState ->
-                        oldState.copy(fact = it.text)
-                    }
-                }
-                .onFailure {
-                    Log.e("TEST", null, it)
-                }
+                .onSuccess { updateState(it.text) }
+                .onFailure { Log.w("PelagoApp", it) }
+        }
+    }
+
+    private fun updateState(fact: String) {
+        _state.update { oldState ->
+            val previousFacts = (oldState.previousFacts + oldState.latestFact)
+                .filterNotNull()
+                .takeLast(3)
+
+            oldState.copy(latestFact = fact, previousFacts = previousFacts)
         }
     }
 }
