@@ -1,9 +1,10 @@
 package com.pelagohealth.codingchallenge.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pelagohealth.codingchallenge.data.repository.FactRepository
+import com.pelagohealth.codingchallenge.presentation.model.MainState
+import com.pelagohealth.codingchallenge.presentation.model.Message
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,8 +33,13 @@ class MainViewModel @Inject constructor(
         _state.update { oldState ->
             oldState.copy(
                 previousFacts = oldState.previousFacts.filter { it != fact },
+                message = Message.FactDeleted,
             )
         }
+    }
+
+    fun onMessageDismissed() {
+        _state.update { it.copy(message = null) }
     }
 
     private fun fetchNewFact() {
@@ -41,7 +47,11 @@ class MainViewModel @Inject constructor(
             updateHistory()
             runCatching { repository.get() }
                 .onSuccess { updateLatestFact(it.text) }
-                .onFailure { Log.w("PelagoApp", it) }
+                .onFailure {
+                    _state.update {
+                        it.copy(message = Message.GeneralError)
+                    }
+                }
         }
     }
 
@@ -56,8 +66,8 @@ class MainViewModel @Inject constructor(
     }
 
     private fun updateLatestFact(fact: String) {
-        _state.update { oldState ->
-            oldState.copy(latestFact = fact)
+        _state.update {
+            it.copy(latestFact = fact)
         }
     }
 }

@@ -3,4 +3,6 @@
     <string name="label_random_fact">Random Fact</string>
     <string name="label_history">History</string>
     <string name="button_text">More facts!</string>
+    <string name="message_fact_deleted">The fact has been successfully removed from history</string>
+    <string name="message_general_error">Something when wrong, try again later</string>
 </resources>

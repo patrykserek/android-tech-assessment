@@ -3,6 +3,7 @@ package com.pelagohealth.codingchallenge
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -26,16 +27,22 @@ import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pelagohealth.codingchallenge.presentation.MainViewModel
+import com.pelagohealth.codingchallenge.presentation.model.Message
 import com.pelagohealth.codingchallenge.presentation.ui.thenIf
 import com.pelagohealth.codingchallenge.ui.theme.PelagoCodingChallengeTheme
 import com.valentinilk.shimmer.shimmer
@@ -55,8 +63,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PelagoCodingChallengeTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MainScreen()
+                val snackbarHostState = remember { SnackbarHostState() }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(snackbarHostState) },
+                ) { insetPadding ->
+                    MainScreen(
+                        modifier = Modifier.padding(insetPadding),
+                        snackbarHostState = snackbarHostState,
+                    )
                 }
             }
         }
@@ -65,9 +80,22 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
+) {
     val viewModel: MainViewModel = viewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    LaunchedEffect(state.message) {
+        state.message?.let {
+            val result = snackbarHostState.showSnackbar(context.getString(it.textRes))
+            if (result == SnackbarResult.Dismissed) {
+                viewModel.onMessageDismissed()
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -203,10 +231,17 @@ fun TextCard(
     }
 }
 
+private val Message.textRes: Int
+    @StringRes
+    get() = when (this) {
+        Message.FactDeleted -> R.string.message_fact_deleted
+        Message.GeneralError -> R.string.message_general_error
+    }
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     PelagoCodingChallengeTheme {
-        MainScreen()
+        MainScreen(snackbarHostState = SnackbarHostState())
     }
 }
