@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 8.dp),
-            text = "Random Fact",
+            text = stringResource(R.string.title_random_fact),
             style = MaterialTheme.typography.titleLarge,
         )
         state.latestFact?.let {
@@ -78,7 +79,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         if (state.previousFacts.isNotEmpty()) {
             Text(
                 modifier = Modifier.padding(start = 8.dp, top = 12.dp),
-                text = "History",
+                text = stringResource(R.string.label_history),
                 style = MaterialTheme.typography.labelLarge,
             )
             LazyColumn(reverseLayout = true) {
@@ -99,7 +100,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             onClick = { viewModel.fetchNewFact() }
         ) {
-            Text(text = "More facts!")
+            Text(text = stringResource(R.string.button_text))
         }
     }
 }
