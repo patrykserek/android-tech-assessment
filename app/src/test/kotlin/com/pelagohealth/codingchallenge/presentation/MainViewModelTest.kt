@@ -4,10 +4,12 @@ import com.pelagohealth.codingchallenge.FakeFactsRestApi
 import com.pelagohealth.codingchallenge.PresentationTest
 import com.pelagohealth.codingchallenge.TestDispatcherProvider
 import com.pelagohealth.codingchallenge.data.repository.FactRepository
+import com.pelagohealth.codingchallenge.presentation.model.Message
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class MainViewModelTest : PresentationTest() {
@@ -84,5 +86,29 @@ class MainViewModelTest : PresentationTest() {
 
         systemUnderTest.onFactSwiped(expectedFact)
         assertTrue(systemUnderTest.state.value.previousFacts.isEmpty())
+        assertEquals(
+            expected = Message.FactDeleted,
+            actual = systemUnderTest.state.value.message,
+        )
+    }
+
+    @Test
+    fun `when message dismissed then clear message`() {
+        systemUnderTest.onMessageDismissed()
+
+        assertNull(systemUnderTest.state.value.message)
+    }
+
+    @Test
+    fun `when an error occurred then show error message`() {
+        // throws an exception
+        repeat(6) {
+            systemUnderTest.onMoreFactsClicked()
+        }
+
+        assertEquals(
+            expected = Message.GeneralError,
+            actual = systemUnderTest.state.value.message,
+        )
     }
 }
