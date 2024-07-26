@@ -38,19 +38,26 @@ class MainViewModel @Inject constructor(
 
     private fun fetchNewFact() {
         viewModelScope.launch {
+            updateHistory()
             runCatching { repository.get() }
-                .onSuccess { updateState(it.text) }
+                .onSuccess { updateLatestFact(it.text) }
                 .onFailure { Log.w("PelagoApp", it) }
         }
     }
 
-    private fun updateState(fact: String) {
+    private fun updateHistory() {
         _state.update { oldState ->
             val previousFacts = (oldState.previousFacts + oldState.latestFact)
                 .filter { it.isNotBlank() }
                 .takeLast(3)
 
-            oldState.copy(latestFact = fact, previousFacts = previousFacts)
+            oldState.copy(latestFact = "", previousFacts = previousFacts)
+        }
+    }
+
+    private fun updateLatestFact(fact: String) {
+        _state.update { oldState ->
+            oldState.copy(latestFact = fact)
         }
     }
 }
