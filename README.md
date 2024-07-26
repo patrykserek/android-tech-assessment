@@ -54,6 +54,21 @@ should be good enough to give us an idea of your skills and how you approach a t
 
 - [Random facts API Documentation](https://uselessfacts.jsph.pl/)
 
+## Decision record
+
+- For simplicity, a URL to the REST API is kept directly in the DataModule. In the future, it can be
+  moved to the place dedicated to URLs to external services.
+- For the same reason, I decided not to use a UseCase for fetching facts. This operation doesn't
+  require any extra logic to be covered in the UseCase.
+
+## Further tweaks
+
+- Migrate to the latest Compose version. After implementing the swipe-to-delete feature, I realized
+  that the Compose library was quite old and I'd used deprecated methods.
+- Introduce facts history persistence.
+- Add Compose tests.
+- Make swipe-to-dismiss composable more generic to be able to reuse it.
+
 ## Submission
 
 You can either send us a link to a public repository (GitHub, Bitbucket, etc.) or a zip file with your project when
