@@ -47,7 +47,7 @@ class MainViewModel @Inject constructor(
     private fun updateState(fact: String) {
         _state.update { oldState ->
             val previousFacts = (oldState.previousFacts + oldState.latestFact)
-                .filterNotNull()
+                .filter { it.isNotBlank() }
                 .takeLast(3)
 
             oldState.copy(latestFact = fact, previousFacts = previousFacts)

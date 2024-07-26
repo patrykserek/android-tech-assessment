@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pelagohealth.codingchallenge.presentation.MainViewModel
+import com.pelagohealth.codingchallenge.presentation.ui.thenIf
 import com.pelagohealth.codingchallenge.ui.theme.PelagoCodingChallengeTheme
+import com.valentinilk.shimmer.shimmer
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,12 +69,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
             text = stringResource(R.string.label_random_fact),
             style = MaterialTheme.typography.labelLarge,
         )
-        state.latestFact?.let {
-            TextCard(
-                text = it,
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-            )
-        }
+        TextCard(
+            text = state.latestFact,
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+        )
         if (state.previousFacts.isNotEmpty()) {
             Text(
                 modifier = Modifier.padding(start = 8.dp, top = 12.dp),
@@ -139,7 +139,9 @@ fun TextCard(
     backgroundColor: Color,
 ) {
     Card(
-        modifier = Modifier.padding(vertical = 4.dp),
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .thenIf(text.isBlank()) { shimmer() },
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Text(
