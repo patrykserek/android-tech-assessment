@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -60,30 +60,46 @@ fun MainScreen(modifier: Modifier = Modifier) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
     ) {
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            text = "Random Fact",
+            style = MaterialTheme.typography.titleLarge,
+        )
         state.latestFact?.let {
-            Text(
+            TextCard(
                 text = it,
-                modifier = modifier
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
             )
         }
-        Button(onClick = { viewModel.fetchNewFact() }) {
-            Text("More facts!")
-        }
-        LazyColumn(reverseLayout = true) {
-            items(
-                items = state.previousFacts,
-                key = { it },
-            ) {
-                SwipeToDismissItem(
-                    modifier = Modifier.animateItemPlacement(),
-                    text = it,
-                    viewModel::onFactSwiped,
-                )
+        if (state.previousFacts.isNotEmpty()) {
+            Text(
+                modifier = Modifier.padding(start = 8.dp, top = 12.dp),
+                text = "History",
+                style = MaterialTheme.typography.labelLarge,
+            )
+            LazyColumn(reverseLayout = true) {
+                items(
+                    items = state.previousFacts,
+                    key = { it },
+                ) {
+                    SwipeToDismissItem(
+                        modifier = Modifier.animateItemPlacement(),
+                        text = it,
+                        viewModel::onFactSwiped,
+                    )
+                }
             }
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Button(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            onClick = { viewModel.fetchNewFact() }
+        ) {
+            Text(text = "More facts!")
         }
     }
 }
@@ -103,8 +119,11 @@ fun SwipeToDismissItem(
         directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
         background = {},
         dismissContent = {
-            Text(text = text)
-        }
+            TextCard(
+                text = text,
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+            )
+        },
     )
 }
 
