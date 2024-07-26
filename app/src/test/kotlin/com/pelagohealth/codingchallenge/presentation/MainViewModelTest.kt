@@ -4,7 +4,6 @@ import com.pelagohealth.codingchallenge.FakeFactsRestApi
 import com.pelagohealth.codingchallenge.PresentationTest
 import com.pelagohealth.codingchallenge.TestDispatcherProvider
 import com.pelagohealth.codingchallenge.data.repository.FactRepository
-import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -25,7 +24,7 @@ class MainViewModelTest : PresentationTest() {
     }
 
     @Test
-    fun `when init then fetch new fact`() = runTest {
+    fun `when init then fetch new fact`() {
         assertEquals(
             expected = "Every acre of American crops harvested contains 100 pounds of insects.",
             actual = systemUnderTest.state.value.latestFact,
@@ -33,12 +32,12 @@ class MainViewModelTest : PresentationTest() {
     }
 
     @Test
-    fun `when init then previous facts are empty`() = runTest {
+    fun `when init then previous facts are empty`() {
         assertTrue(systemUnderTest.state.value.previousFacts.isEmpty())
     }
 
     @Test
-    fun `when more facts clicked then fetch new fact`() = runTest {
+    fun `when more facts clicked then fetch new fact`() {
         systemUnderTest.onMoreFactsClicked()
 
         assertEquals(
@@ -48,7 +47,7 @@ class MainViewModelTest : PresentationTest() {
     }
 
     @Test
-    fun `when more facts clicked then update previous facts`() = runTest {
+    fun `when more facts clicked then update previous facts`() {
         systemUnderTest.onMoreFactsClicked()
 
         assertEquals(
@@ -58,7 +57,7 @@ class MainViewModelTest : PresentationTest() {
     }
 
     @Test
-    fun `when more facts clicked couple times then keep max 3 previous facts`() = runTest {
+    fun `when more facts clicked couple times then keep max 3 previous facts`() {
         repeat(4) {
             systemUnderTest.onMoreFactsClicked()
         }
@@ -74,7 +73,7 @@ class MainViewModelTest : PresentationTest() {
     }
 
     @Test
-    fun `when previous fact swiped then remove it`() = runTest {
+    fun `when previous fact swiped then remove it and notify`() {
         val expectedFact = "Every acre of American crops harvested contains 100 pounds of insects."
 
         systemUnderTest.onMoreFactsClicked() // add fact to previous
