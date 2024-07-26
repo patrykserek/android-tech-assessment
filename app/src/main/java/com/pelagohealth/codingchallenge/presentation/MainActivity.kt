@@ -64,8 +64,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 8.dp),
-            text = stringResource(R.string.title_random_fact),
-            style = MaterialTheme.typography.titleLarge,
+            text = stringResource(R.string.label_random_fact),
+            style = MaterialTheme.typography.labelLarge,
         )
         state.latestFact?.let {
             TextCard(
